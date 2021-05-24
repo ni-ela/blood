@@ -7,6 +7,7 @@ import {
   getById
 } from '@/services/api/requisitions';
 import requistion from '@/services/api/requistion';
+import integrityProducts from '@/services/api/integrityProducts';
 import itensRequisition from '@/services/api/itensRequisition';
 
 export const actions = {
@@ -399,4 +400,110 @@ export const actions = {
       state.commit('FETCH_TYPES_PROCEDURE_ERROR', { error });
     }
   },
-};
+
+  //PRODUCT INTEGRITY
+  async addNonCompliance(state, { id_produto_requisicao, numero_da_bolsa, sequencial_separacao, codigo_produto, codigos_nao_conformidade }) {
+    try {
+      state.commit('CREATE_NON_COMPLIANCE_PRODUCTS_PENDING');
+
+      const response = await integrityProducts.createNonCompliance({ id_produto_requisicao, numero_da_bolsa, sequencial_separacao, codigo_produto, codigos_nao_conformidade });
+
+      state.commit('CREATE_NON_COMPLIANCE_PRODUCTS_SUCCESS', response.data.result);
+
+      state.dispatch(
+        'snackbar/success',
+        { message: response.data.message.pt },
+        { root: true }
+      );
+    } catch (error) {
+      state.commit('CREATE_NON_COMPLIANCE_PRODUCTS_ERROR', { error });
+    }
+  },
+
+  async addCheckIntegrity(state, { product }) {
+    try {
+      state.commit('CREATE_INTEGRITY_PRODUCTS_PENDING');
+
+      const response = await integrityProducts.createCheckIntegrity({ product });
+
+      state.commit('CREATE_INTEGRITY_PRODUCTS_SUCCESS', response.data.result);
+
+      state.dispatch(
+        'snackbar/success',
+        { message: response.data.message.pt },
+        { root: true }
+      );
+    } catch (error) {
+      state.commit('CREATE_INTEGRITY_PRODUCTS_ERROR', { error });
+    }
+  },
+
+  
+  async getBloodComponentsById(state, idrequisition) {
+    try {
+      state.commit('LIST_BLOOD_COMPONENT_PENDING');
+      const response = await integrityProducts.getBloodComponentsByIdRequisition(idrequisition);
+     
+      console.log('resulttt', response);
+
+     // const response = await integrityProducts.getBloodComponentsByIdRequisition(state.getters.getBloodComponentsIntegrity.idRequisition);
+
+     // if (resultRequisition > 0 && resultRequisition.length) {
+
+        state.commit('LIST_BLOOD_COMPONENT_SUCCESS', {
+          integrityProducts: response.data.result,
+        });
+
+     //  state.commit('LIST_BLOOD_COMPONENT_SUCCESS_RESULT',
+       //         { integrityProducts: resultRequisition}
+//);
+
+     // } else {
+       // state.commit('REQUISITION_BLOOD_COMPONENT_SUCCESS', {
+         // integrityProducts: null,
+        //});
+      //}
+
+    } catch (error) {
+      state.commit('REQUISITION_BLOOD_COMPONENT_ERROR', { error });
+    }
+  },
+
+
+/*  async getBloodComponentsById(state, idrequisition) {
+    try {
+      if (idrequisition) {
+        const response = await getBloodComponentsByIdRequistion(idrequisition);
+
+        const resultRequisition = response.data.result[0];
+
+
+        state.commit('CREATE_BLOOD_COMPONENTS_REQUISITION_SUCCESS', {
+          idRequisition: resultRequisition.idrequisicao,
+        });
+
+        state.commit('BLOOD_COMPONENTS_EDIT_STATE', resultRequisition);
+      } else {
+        state.commit('BLOOD_COMPONENTS_EDIT_STATE', null);
+      }
+    } catch (error) {
+      state.commit('CREATE_BLOOD_COMPONENTS_REQUISITION_ERROR', { error });
+    }
+  },*/
+
+  async getAllNonConformities(state) {
+    try {
+      state.commit('LIST_NON_CONFORMITIES_PENDING');
+
+      const response = await integrityProducts.listNonConformities();
+
+      state.commit('LIST_NON_CONFORMITIES_SUCCESS', {
+        integrityProducts: response.data.result,
+      });
+    } catch (error) {
+      state.commit('LIST_NON_CONFORMITIES_ERROR', { error });
+    }
+  }
+
+}
+  /*maybe:  listCodesProduct */

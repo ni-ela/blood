@@ -93,7 +93,7 @@ export default {
   },
   methods: {
     ...mapActions('pretransfusion', ['rejectTransfusionRequisition']),
-    ...mapActions('modal', ['closeSeeTransfusion']),
+    ...mapActions('modal', ['closeSeeTransfusion', 'closeCheckIntegrity']),
     keepModalOpen() {
       this.loading = false;
     },
@@ -112,6 +112,7 @@ export default {
           });
           this.closeModal();
           this.closeSeeTransfusion();
+          this.closeCheckIntegrity();
         }
       } catch (error) {
         this.keepModalOpen();

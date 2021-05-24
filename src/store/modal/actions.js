@@ -39,6 +39,8 @@ export const actions = {
   },
   seeTransfusion() {
   },
+  checkIntegrity(){},
+  closeCheckIntegrity(){},
   closeSeeTransfusion() { },
   rejectTransfusionRequisition() { }
 };

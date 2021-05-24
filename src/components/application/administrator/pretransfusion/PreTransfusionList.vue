@@ -80,6 +80,9 @@
                       class="mr-1"
                       :onClick="() => handleEditPretransfusion(item)"
                     />
+                    <CheckIntegrityButton
+                      :onClick="() => handleCheckProductIntegrity(item)"
+                    />
                     <BlockButton
                       :disabled="isBlockButtonDisabled(item.status)"
                       :onClick="() => handleCancel(item)"
@@ -97,6 +100,10 @@
       />
       <SeeModal
         v-if="visibleSeeTranfusion"
+        :requisition="requisitionSelected"
+      />
+      <CheckIntegrityModal
+        v-if="visibleCheckIntegrity"
         :requisition="requisitionSelected"
       />
 
@@ -117,9 +124,11 @@ import PageContent from '@/components/template/PageContent.vue';
 import AddButton from '@/components/template/buttons/AddButton.vue';
 import EditButton from '@/components/template/buttons/EditButton.vue';
 import SeeRequestButton from '@/components/template/buttons/SeeRequestButton.vue';
+import CheckIntegrityButton from '@/components/template/buttons/CheckIntegrityButton.vue';
 import BlockButton from '@/components/template/buttons/BlockButton.vue';
 
 import CreateTransfusionModal from '@/components/application/administrator/pretransfusion/CreateTransfusionModal.vue';
+import CheckIntegrityModal from '@/components/application/administrator/pretransfusion/productIntegrity/CheckIntegrityModal.vue';
 import CancelTransfusionModal from '@/components/application/administrator/pretransfusion/CancelTransfusionModal.vue';
 import SeeModal from '@/components/application/administrator/pretransfusion/SeeModal.vue';
 
@@ -132,20 +141,24 @@ export default {
     AddButton,
     EditButton,
     SeeRequestButton,
+    CheckIntegrityButton,
     BlockButton,
     CreateTransfusionModal,
     CancelTransfusionModal,
     SeeModal,
+    CheckIntegrityModal,
   },
   data() {
     return {
       loading: false,
       visible: false,
       visibleSeeTranfusion: false,
+      visibleCheckIntegrity: false,
       unsubscribe: null,
       unsubscribeClose: null,
       unsubscribeEdit: null,
       unsubscribeSeeTransfusion: null,
+      unsubscribeCheckIntegrity: null,
       search: '',
       requisitionSelected: {},
       headers: [
@@ -232,7 +245,7 @@ export default {
       after: async (action) => {
         if (action.type === 'modal/closeRequisition') {
           this.visible = false;
-        }
+        } 
       },
     });
 
@@ -240,6 +253,22 @@ export default {
       after: async (action) => {
         if (action.type === 'modal/seeTransfusion') {
           this.visibleSeeTranfusion = true;
+        }
+      },
+    });
+
+     this.unsubscribeCheckIntegrity = this.$store.subscribeAction({
+      after: async (action) => {
+        if (action.type === 'modal/checkIntegrity') {
+          this.visibleCheckIntegrity = true;
+        }
+      },
+    });
+
+    this.unsubscribeClose = this.$store.subscribeAction({
+      after: async (action) => {
+        if (action.type === 'modal/closeCheckIntegrity') {
+          this.visibleCheckIntegrity = false;
         }
       },
     });
@@ -259,8 +288,9 @@ export default {
       'addPreTransfusion',
       'editTransfusion',
       'seeTransfusion',
+      'checkIntegrity'
     ]),
-    ...mapActions('requisition', ['getRequisionbyId', 'getRequisitionSummary']),
+    ...mapActions('requisition', ['getRequisionbyId', 'getRequisitionSummary', 'getBloodComponentsById']),
     isBlockButtonDisabled(status) {
       return ['Em Elaboração', 'Cancelada'].indexOf(status) !== -1
         ? true
@@ -293,8 +323,13 @@ export default {
       await this.getRequisionbyId(this.requisitionSelected.idatendimento);
       await this.getRequisitionSummary();
       this.seeTransfusion();
-      this.loading = false;
+      this.loading = false; 
     },
+    async handleCheckProductIntegrity(item){
+      this.requisitionSelected = item;
+      await this.getBloodComponentsById(this.requisitionSelected.idrequisicao); //request
+      this.checkIntegrity();
+    }
   },
   async beforeRouteUpdate(to, from, next) {
     await this.fetchTransfusionRequisitionsList();

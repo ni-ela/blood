@@ -89,6 +89,11 @@ const state = {
     error: null,
     data: [],
   },
+  integrityProducts: {
+    loading: false,
+    error: null,
+    data: [],
+  },
 };
 
 export const requisition = {

@@ -296,4 +296,69 @@ export const mutations = {
     state.typesProcedure.data = [];
     state.typesProcedure.loading = false;
   },
+
+  //INTEGRITY PRODUCT
+  CREATE_NON_COMPLIANCE_PRODUCTS_PENDING(state) {
+    state.integrityProducts.loading = true;
+  },
+  CREATE_NON_COMPLIANCE_PRODUCTS_SUCCESS(state, integrityProducts) {
+    state.integrityProducts.data = integrityProducts;
+    state.integrityProducts.error = null;
+    state.integrityProducts.loading = false;
+  },
+  CREATE_NON_COMPLIANCE_PRODUCTS_ERROR(state, { error }) {
+    state.integrityProducts.error = error;
+    state.integrityProducts.data = null;
+    state.integrityProducts.loading = false;
+  },
+
+    CREATE_INTEGRITY_PRODUCTS_PENDING(state) {
+      state.integrityProducts.loading = true;
+    },
+    CREATE_INTEGRITY_PRODUCTS_SUCCESS(state, integrityProducts) {
+      state.integrityProducts.data = integrityProducts;
+      state.integrityProducts.error = null;
+      state.integrityProducts.loading = false;
+    },
+    CREATE_INTEGRITY_PRODUCTS_ERROR(state, { error }) {
+      state.integrityProducts.error = error;
+      state.integrityProducts.data = null;
+      state.integrityProducts.loading = false;
+    },
+
+    LIST_BLOOD_COMPONENT_PENDING(state) {
+      state.integrityProducts.loading = true;
+    },
+    LIST_BLOOD_COMPONENT_SUCCESS(state, integrityProducts) {
+      state.integrityProducts.data = integrityProducts;
+      state.integrityProducts.error = null;
+      state.integrityProducts.loading = false;
+    },
+    LIST_BLOOD_COMPONENT_SUCCESS_RESULT(state, integrityProducts) {
+      state.integrityProducts.data = integrityProducts;
+      state.integrityProducts.error = null;
+      state.integrityProducts.loading = false;
+    },
+    LIST_BLOOD_COMPONENT_ERROR(state, { error }) {
+      state.integrityProducts.error = error;
+      state.integrityProducts.data = [];
+      state.integrityProducts.loading = false;
+    },
+    REQUISITION_BLOOD_COMPONENT_SUCCESS(state) {
+      state.integrityProducts.data = null;
+    },
+
+    LIST_NON_CONFORMITIES_PENDING(state) {
+      state.integrityProducts.loading = true;
+    },
+    LIST_NON_CONFORMITIES_SUCCESS(state, integrityProducts) {
+      state.integrityProducts.data = integrityProducts;
+      state.integrityProducts.error = null;
+      state.integrityProducts.loading = false;
+    },
+    LIST_NON_CONFORMITIES_ERROR(state, { error }) {
+      state.integrityProducts.error = error;
+      state.integrityProducts.data = null;
+      state.integrityProducts.loading = false; 
+    }
 };
