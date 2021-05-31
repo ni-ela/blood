@@ -436,19 +436,26 @@ export const actions = {
     }
   },
 
-  async addCheckIntegrity(state, { product }) {
+  async addCheckIntegrity(state, product) {
     try {
       state.commit('CREATE_INTEGRITY_PRODUCTS_PENDING');
 
-      const response = await integrityProducts.createCheckIntegrity({ product });
-
-      state.commit('CREATE_INTEGRITY_PRODUCTS_SUCCESS', response.data.result);
-
-      state.dispatch(
-        'snackbar/success',
-        { message: response.data.message.pt },
-        { root: true }
-      );
+      const response = await integrityProducts.createCheckIntegrity(product);
+      console.log("rispre", response);
+      if (response.status === 200) {
+        state.commit('CREATE_INTEGRITY_PRODUCTS_SUCCESS', response.data.result);
+        state.dispatch(
+          'snackbar/success',
+          { message: response.data.message.pt },
+          { root: true }
+        );
+      } else {
+        state.dispatch(
+          'snackbar/error',
+          { message: response.data.message.pt },
+          { root: true }
+        );
+      }
     } catch (error) {
       state.commit('CREATE_INTEGRITY_PRODUCTS_ERROR', { error });
     }
@@ -492,34 +499,11 @@ export const actions = {
     }
   },
 
-
-  /*  async getBloodComponentsById(state, idrequisition) {
-      try {
-        if (idrequisition) {
-          const response = await getBloodComponentsByIdRequistion(idrequisition);
-  
-          const resultRequisition = response.data.result[0];
-  
-  
-          state.commit('CREATE_BLOOD_COMPONENTS_REQUISITION_SUCCESS', {
-            idRequisition: resultRequisition.idrequisicao,
-          });
-  
-          state.commit('BLOOD_COMPONENTS_EDIT_STATE', resultRequisition);
-        } else {
-          state.commit('BLOOD_COMPONENTS_EDIT_STATE', null);
-        }
-      } catch (error) {
-        state.commit('CREATE_BLOOD_COMPONENTS_REQUISITION_ERROR', { error });
-      }
-    },*/
-
   async getAllNonConformities(state) {
     try {
       state.commit('LIST_NON_CONFORMITIES_PENDING');
 
       const response = await integrityProducts.listNonConformities();
-      console.log("resss", response);
       if (response.status === 200) {
         if (response.data.result.length > 0) {
           state.commit('LIST_NON_CONFORMITIES_SUCCESS', {

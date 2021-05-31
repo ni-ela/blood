@@ -64,61 +64,6 @@ export default {
     },
   },
 
-  /*  async submit() {
-      if (this.codigos) {
-        let codigos_nao_conformidade = this.codigos.map(function (value) {
-          return { codigo: `${value}` };
-        });
-        try { */
-  //fechar modal de listagem de produto e fazer check de integridade
-  // this.close();
-  /*  let send = {
-            id_produto_requisicao: this.product.id_produto_requisicao,
-            numero_da_bolsa: this.product.numero_da_bolsa,
-            sequencial_separacao: this.product.sequencial_separacao,
-            codigo_produto: this.product.codigo_do_produto,
-            codigos_nao_conformidade: codigos_nao_conformidade,
-          };
-          console.log('send', send);
-          await this.addNonCompliance(send); */
-
-  //this.loading = true;
-
-  /* const notDeletedBeds = this.clinicSelected.leitos.filter(
-            (element) => {
-              return this.editClinic.leitos.find(
-                (leito) => leito == element.descricao
-              );
-            }
-          );
-
-          const newBeds = this.editClinic.leitos.filter((element) => {
-            return !this.clinicSelected.leitos.find(
-              (leito) => leito.descricao == element
-            );
-          });
-
-          await this.editClinicFetch({
-            idClinica: this.clinicSelected.id,
-            descricao: this.editClinic.description,
-            ativo: this.editClinic.status,
-            novosLeitos: newBeds.map((element) => {
-              return {
-                descricao: element,
-                ativo: 'T',
-              };
-            }),
-            leitos: notDeletedBeds.map((bed) => {
-              return { idLeito: bed.idleito };
-            }),
-          });
-          this.closeModal(); */
-  /*  } catch (error) {
-          this.keepModalOpen();
-        }
-      }
-    }, */
-
   methods: {
     ...mapActions('modal', ['closeCheckIntegrity']),
     ...mapActions('requisition', ['addNonCompliance']),
@@ -129,9 +74,7 @@ export default {
     async onChange(val) {
       if (this.codigos.indexOf(val) < 0) {
         this.codigos.push(val);
-        console.log('insere', val);
       } else {
-        console.log('tira', val);
         this.codigos = this.codigos.filter(function (value) {
           return value !== val;
         });
@@ -143,14 +86,13 @@ export default {
           return { codigo: `${value}` };
         });
         let send = {
-          id_produto_requisicao: this.product.id_produto_requisicao,
           numero_da_bolsa: this.product.numero_da_bolsa,
-          sequencial_separacao: this.product.sequencial_separacao,
-          codigo_produto: this.product.codigo_do_produto,
+          id_produto_requisicao: Number(this.product.id_produto_requisicao),
+          sequencial_separacao: Number(this.product.sequencial_separacao),
+          codigo_produto: Number(this.product.codigo_do_produto),
           codigos_nao_conformidade: codigos_nao_conformidade,
         };
         await this.addNonCompliance(send);
-        //fazer check de integridade
       } catch {
        this.close();
       }
@@ -163,7 +105,6 @@ export default {
       if (this.getNonConformities) {
         return this.getNonConformities.nonConformities;
       } else {
-       // this.close();
         return [];
       }
     },

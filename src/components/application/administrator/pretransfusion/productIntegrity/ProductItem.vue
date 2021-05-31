@@ -59,7 +59,7 @@
               dark
               data-testid="check-button"
               color="primary"
-              @click="content = 'checkFormIntegrity'"
+              @click="()=> handleCheckForm(product)"
             >
               <v-icon dark>mdi-qrcode</v-icon>
             </v-btn>
@@ -69,7 +69,7 @@
               depressed
               color="error"
               dark
-              data-testid="check-button"
+              data-testid="non-button"
               @click="() => handleNonCompliance(product)"
             >
               <v-icon dark> mdi-alert-octagon </v-icon>
@@ -82,8 +82,11 @@
         ></v-divider>
       </v-list>
     </v-card>
-    <div v-else-if="content === 'checkFormIntegrity'">
-      <CheckForm :requisition="requisition" :product="product" />
+    <div v-else-if="content == 'checkFormIntegrity'">
+      <CheckForm
+        :idrequisicao="requisition.idrequisicao"
+        :id_produto_requisicao="product.id_produto_requisicao"
+      />
     </div>
     <div v-else>
       <ReportNonCompliance :requisition="requisition" :product="product" />
@@ -101,6 +104,7 @@ export default {};
 import { mapGetters, mapActions } from 'vuex';
 import CheckForm from '@/components/application/administrator/pretransfusion/productIntegrity/CheckForm.vue';
 import ReportNonCompliance from '@/components/application/administrator/pretransfusion/productIntegrity/ReportNonCompliance.vue';
+import requistion from '@/services/api/requistion';
 
 export default {
   data() {
@@ -142,6 +146,13 @@ export default {
       this.closeCheckIntegrity();
     },
     ...mapActions('requisition', ['getAllNonConformities']),
+    async handleCheckForm(item) {
+        this.product = item;
+        this.content = 'checkFormIntegrity';
+    },
+    /*  async saveDataProduct(){
+
+    }, */
     async handleNonCompliance(item) {
       if (this.getBloodComponentsIntegrity.integrityProducts) {
         this.product = item;
