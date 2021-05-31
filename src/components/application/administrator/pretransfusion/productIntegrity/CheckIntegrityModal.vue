@@ -2,7 +2,7 @@
   <BaseModal :isOpen="visible" :handleClose="() => close()">
     <template v-slot:title>{{ title }}</template>
     <template v-slot:content>
-      <ProductItem />
+      <ProductItem :requisition="requisition" />
     </template>
   </BaseModal>
 </template>
@@ -12,8 +12,6 @@ import { mapActions } from 'vuex';
 
 import BaseModal from '@/components/template/modal/BaseModal.vue';
 import ProductItem from '@/components/application/administrator/pretransfusion/productIntegrity/ProductItem.vue';
-import CheckForm from '@/components/application/administrator/pretransfusion/productIntegrity/CheckForm.vue';
-import ReportNonCompliance from '@/components/application/administrator/pretransfusion/productIntegrity/ReportNonCompliance.vue';
 import Notification from '@/components/application/administrator/pretransfusion/Notification.vue';
 
 export default {
@@ -31,8 +29,6 @@ export default {
   components: {
     BaseModal,
     ProductItem,
-    CheckForm,
-    ReportNonCompliance,
     Notification,
   },
   data() {

@@ -11,9 +11,13 @@ export const getters = {
   getHasListProductTypesRequestFailed: (state) => state.listProductsType.error !== null,
   getListProductTypesRequestError: (state) => state.listProductsType.error,
 
+  //NON-CONFORMITIES
+  getNonConformities: (state) => state.nonConformities.data,
+  getNonConformitiesLoading: (state) => state.nonConformities.loading,
+  getNonConformitiesFailed: (state) => state.nonConformities.error !== null,
+  getNonConformitiesError: (state) => state.nonConformities.error,
+  
   //PRODUCTS INTEGRITY
-  getNonConformities: (state) => state.integrityProducts.data,
-  //getProductSCode: (state) => state.integrityProducts.data,
   getBloodComponentsIntegrity: (state) => state.integrityProducts.data,
   getBloodComponentsIntegrityLoading: (state) => state.integrityProducts.loading,
   getBloodComponentsIntegrityFailed: (state) => state.integrityProducts.error !== null,

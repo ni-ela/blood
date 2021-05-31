@@ -299,17 +299,17 @@ export const mutations = {
 
   //INTEGRITY PRODUCT
   CREATE_NON_COMPLIANCE_PRODUCTS_PENDING(state) {
-    state.integrityProducts.loading = true;
+    state.nonConformities.loading = true;
   },
-  CREATE_NON_COMPLIANCE_PRODUCTS_SUCCESS(state, integrityProducts) {
-    state.integrityProducts.data = integrityProducts;
-    state.integrityProducts.error = null;
-    state.integrityProducts.loading = false;
+  CREATE_NON_COMPLIANCE_PRODUCTS_SUCCESS(state, nonConformities) {
+    state.nonConformities.data = nonConformities;
+    state.nonConformities.error = null;
+    state.nonConformities.loading = false;
   },
   CREATE_NON_COMPLIANCE_PRODUCTS_ERROR(state, { error }) {
-    state.integrityProducts.error = error;
-    state.integrityProducts.data = null;
-    state.integrityProducts.loading = false;
+    state.nonConformities.error = error;
+    state.nonConformities.data = null;
+    state.nonConformities.loading = false;
   },
 
     CREATE_INTEGRITY_PRODUCTS_PENDING(state) {
@@ -347,18 +347,23 @@ export const mutations = {
     REQUISITION_BLOOD_COMPONENT_SUCCESS(state) {
       state.integrityProducts.data = null;
     },
-
-    LIST_NON_CONFORMITIES_PENDING(state) {
-      state.integrityProducts.loading = true;
-    },
-    LIST_NON_CONFORMITIES_SUCCESS(state, integrityProducts) {
-      state.integrityProducts.data = integrityProducts;
-      state.integrityProducts.error = null;
+    REQUISITION_BLOOD_COMPONENT_ERROR(state, {error}){
+      state.integrityProducts.error = error;
+      state.integrityProducts.data = [];
       state.integrityProducts.loading = false;
     },
+
+    LIST_NON_CONFORMITIES_PENDING(state) {
+      state.nonConformities.loading = true;
+    },
+    LIST_NON_CONFORMITIES_SUCCESS(state, nonConformities) {
+      state.nonConformities.data = nonConformities;
+      state.nonConformities.error = null;
+      state.nonConformities.loading = false;
+    },
     LIST_NON_CONFORMITIES_ERROR(state, { error }) {
-      state.integrityProducts.error = error;
-      state.integrityProducts.data = null;
-      state.integrityProducts.loading = false; 
+      state.nonConformities.error = error;
+      state.nonConformities.data = null;
+      state.nonConformities.loading = false; 
     }
 };

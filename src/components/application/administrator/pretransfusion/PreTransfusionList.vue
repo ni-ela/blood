@@ -159,6 +159,7 @@ export default {
       unsubscribeEdit: null,
       unsubscribeSeeTransfusion: null,
       unsubscribeCheckIntegrity: null,
+      unsubscribeCloseCheckIntegrity: null,
       search: '',
       requisitionSelected: {},
       headers: [
@@ -265,7 +266,7 @@ export default {
       },
     });
 
-    this.unsubscribeClose = this.$store.subscribeAction({
+    this.unsubscribeCloseCheckIntegrity = this.$store.subscribeAction({
       after: async (action) => {
         if (action.type === 'modal/closeCheckIntegrity') {
           this.visibleCheckIntegrity = false;
@@ -327,8 +328,12 @@ export default {
     },
     async handleCheckProductIntegrity(item){
       this.requisitionSelected = item;
-      await this.getBloodComponentsById(this.requisitionSelected.idrequisicao); //request
-      this.checkIntegrity();
+      try {
+        await this.getBloodComponentsById(this.requisitionSelected.idrequisicao); //request
+        this.checkIntegrity();
+      } catch (e) {
+        console.error(e);
+      }
     }
   },
   async beforeRouteUpdate(to, from, next) {

@@ -3,8 +3,8 @@ import httpClient from '@/plugins/axios';
 /**
  * Protocol: 00XX - API to create a non-compliance blood components
  */
-const createNonCompliance = async ({ id_produto_requisicao, numero_da_bolsa , sequencial_separacao, codigo_produto, codigos_nao_conformidade }) => {
-  return httpClient.post('/blood-components-integrity', { id_produto_requisicao, numero_da_bolsa , sequencial_separacao, codigo_produto, codigos_nao_conformidade });
+const createNonCompliance = async (send) => {
+  return httpClient.post('/blood-components-integrity', send);
 }
 
 /**

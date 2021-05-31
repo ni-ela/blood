@@ -94,6 +94,11 @@ const state = {
     error: null,
     data: [],
   },
+  nonConformities: {
+    loading: false,
+    error: null,
+    data: [],
+  },
 };
 
 export const requisition = {

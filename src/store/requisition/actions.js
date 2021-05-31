@@ -402,19 +402,35 @@ export const actions = {
   },
 
   //PRODUCT INTEGRITY
-  async addNonCompliance(state, { id_produto_requisicao, numero_da_bolsa, sequencial_separacao, codigo_produto, codigos_nao_conformidade }) {
+  async addNonCompliance(state, send) {
     try {
       state.commit('CREATE_NON_COMPLIANCE_PRODUCTS_PENDING');
+      const response = await integrityProducts.createNonCompliance(send);
+      /*  
+      se caso for obrigatorio cadastrar pelo menos uma nao conformidade
+      if (send.codigos_nao_conformidade.length == 0) {
+         state.dispatch(
+           'snackbar/warning',
+           { message: 'Selecione pelo menos uma não conformidade' },
+           { root: true }
+         );
+       } */
 
-      const response = await integrityProducts.createNonCompliance({ id_produto_requisicao, numero_da_bolsa, sequencial_separacao, codigo_produto, codigos_nao_conformidade });
+      if (response.status === 200) {
+        state.commit('CREATE_NON_COMPLIANCE_PRODUCTS_SUCCESS', response.data.result);
 
-      state.commit('CREATE_NON_COMPLIANCE_PRODUCTS_SUCCESS', response.data.result);
-
-      state.dispatch(
-        'snackbar/success',
-        { message: response.data.message.pt },
-        { root: true }
-      );
+        state.dispatch(
+          'snackbar/success',
+          { message: response.data.message.pt },
+          { root: true }
+        );
+      } else {
+        state.dispatch(
+          'snackbar/error',
+          { message: response.data.message.pt },
+          { root: true }
+        );
+      }
     } catch (error) {
       state.commit('CREATE_NON_COMPLIANCE_PRODUCTS_ERROR', { error });
     }
@@ -438,31 +454,38 @@ export const actions = {
     }
   },
 
-  
+
   async getBloodComponentsById(state, idrequisition) {
     try {
       state.commit('LIST_BLOOD_COMPONENT_PENDING');
       const response = await integrityProducts.getBloodComponentsByIdRequisition(idrequisition);
-     
-      console.log('resulttt', response);
 
-     // const response = await integrityProducts.getBloodComponentsByIdRequisition(state.getters.getBloodComponentsIntegrity.idRequisition);
-
-     // if (resultRequisition > 0 && resultRequisition.length) {
-
+      if (response.status === 200) {
         state.commit('LIST_BLOOD_COMPONENT_SUCCESS', {
           integrityProducts: response.data.result,
         });
 
-     //  state.commit('LIST_BLOOD_COMPONENT_SUCCESS_RESULT',
-       //         { integrityProducts: resultRequisition}
-//);
+        if (response.data.result.length > 0) {
+          state.commit('LIST_BLOOD_COMPONENT_SUCCESS_RESULT',
+            { integrityProducts: response.data.result }
+          );
 
-     // } else {
-       // state.commit('REQUISITION_BLOOD_COMPONENT_SUCCESS', {
-         // integrityProducts: null,
-        //});
-      //}
+        } else {
+          state.dispatch(
+            'snackbar/warning',
+            { message: response.data.message.pt ? response.data.message.pt : "Ops, algo de errado aconteceu. Tente novamente mais tarde" },
+            { root: true }
+          );
+          state.commit('REQUISITION_BLOOD_COMPONENT_ERROR', { error });
+        }
+      } else {
+        state.dispatch(
+          'snackbar/warning',
+          { message: response.data.message.pt ? response.data.message.pt : "Ops, algo de errado aconteceu. Tente novamente mais tarde" },
+          { root: true }
+        );
+        state.commit('REQUISITION_BLOOD_COMPONENT_ERROR', { error });
+      }
 
     } catch (error) {
       state.commit('REQUISITION_BLOOD_COMPONENT_ERROR', { error });
@@ -470,36 +493,56 @@ export const actions = {
   },
 
 
-/*  async getBloodComponentsById(state, idrequisition) {
-    try {
-      if (idrequisition) {
-        const response = await getBloodComponentsByIdRequistion(idrequisition);
-
-        const resultRequisition = response.data.result[0];
-
-
-        state.commit('CREATE_BLOOD_COMPONENTS_REQUISITION_SUCCESS', {
-          idRequisition: resultRequisition.idrequisicao,
-        });
-
-        state.commit('BLOOD_COMPONENTS_EDIT_STATE', resultRequisition);
-      } else {
-        state.commit('BLOOD_COMPONENTS_EDIT_STATE', null);
+  /*  async getBloodComponentsById(state, idrequisition) {
+      try {
+        if (idrequisition) {
+          const response = await getBloodComponentsByIdRequistion(idrequisition);
+  
+          const resultRequisition = response.data.result[0];
+  
+  
+          state.commit('CREATE_BLOOD_COMPONENTS_REQUISITION_SUCCESS', {
+            idRequisition: resultRequisition.idrequisicao,
+          });
+  
+          state.commit('BLOOD_COMPONENTS_EDIT_STATE', resultRequisition);
+        } else {
+          state.commit('BLOOD_COMPONENTS_EDIT_STATE', null);
+        }
+      } catch (error) {
+        state.commit('CREATE_BLOOD_COMPONENTS_REQUISITION_ERROR', { error });
       }
-    } catch (error) {
-      state.commit('CREATE_BLOOD_COMPONENTS_REQUISITION_ERROR', { error });
-    }
-  },*/
+    },*/
 
   async getAllNonConformities(state) {
     try {
       state.commit('LIST_NON_CONFORMITIES_PENDING');
 
       const response = await integrityProducts.listNonConformities();
+      console.log("resss", response);
+      if (response.status === 200) {
+        if (response.data.result.length > 0) {
+          state.commit('LIST_NON_CONFORMITIES_SUCCESS', {
+            nonConformities: response.data.result,
+          });
 
-      state.commit('LIST_NON_CONFORMITIES_SUCCESS', {
-        integrityProducts: response.data.result,
-      });
+        } else {
+          state.dispatch(
+            'snackbar/warning',
+            { message: response.data.message.pt ? response.data.message.pt : "Ops, algo de errado aconteceu. Tente novamente mais tarde" },
+            { root: true }
+          );
+          state.commit('LIST_NON_CONFORMITIES_ERROR', { error });
+        }
+      } else {
+        state.dispatch(
+          'snackbar/warning',
+          { message: response.data.message.pt ? response.data.message.pt : "Ops, algo de errado aconteceu. Tente novamente mais tarde" },
+          { root: true }
+        );
+        state.commit('LIST_NON_CONFORMITIES_ERROR', { error });
+      }
+
     } catch (error) {
       state.commit('LIST_NON_CONFORMITIES_ERROR', { error });
     }
